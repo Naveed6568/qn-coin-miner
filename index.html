@@ -1,9 +1,45 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyBoI3NnBbxC9T_bd0Ijh-NNSuVtPJRZiDA",
-  authDomain: "qn-coin-miner.firebaseapp.com",
-  projectId: "qn-coin-miner",
-  storageBucket: "qn-coin-miner.firebasestorage.app",
-  messagingSenderId: "640009197407",
-  appId: "1:640009197407:web:0fddf285d0a716b95688ea",
-  measurementId: "G-3M8MWPGSFZ"
-};
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QN Coin Miner</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <h1>Welcome to QN Coin Miner</h1>
+  <button id="mineBtn">Mine QN Coin</button>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoI3NnBbxC9T_bd0Ijh-NNSuVtPJRZiDA",
+      authDomain: "qn-coin-miner.firebaseapp.com",
+      projectId: "qn-coin-miner",
+      storageBucket: "qn-coin-miner.appspot.com",
+      messagingSenderId: "640009197407",
+      appId: "1:640009197407:web:0fddf285d0a716b95688ea",
+      measurementId: "G-3M8MWPGSFZ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const mineButton = document.getElementById("mineBtn");
+
+    mineButton.addEventListener("click", async () => {
+      const userId = "zhR6QCukBBJLoeWXgmSc"; // Replace with actual user ID
+      const userRef = db.collection("users").doc(userId);
+
+      const doc = await userRef.get();
+
+      if (doc.exists) {
+        let currentCoins = doc.data().coins || 0;
+        await userRef.update({ coins: currentCoins + 1 });
+        alert(You mined 1 QN Coin! Total: ${currentCoins + 1});
+      } else {
+        await userRef.set({ username: "test_user", coins: 1 });
+        alert(Welcome! You mined your first QN Coin!);
+      }
+    });
+  </script>
+</body>
+</html>
